@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
+        android:src="@mipmap/logo" />
+
+    <TableLayout
+        android:id="@+id/home_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center">
+
+        <TableRow android:layout_marginTop="@dimen/tablerow_marin_top">
+
+            <ImageView
+                android:id="@+id/model"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/img_marin_right"
+                android:src="@mipmap/section1" />
+
+            <ImageView
+                android:id="@+id/room"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/img_marin_left"
+                android:src="@mipmap/section2" />
+
+        </TableRow>
+
+        <TableRow android:layout_marginTop="@dimen/tablerow_marin_top">
+
+            <ImageView
+                android:id="@+id/closet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/img_marin_right"
+                android:src="@mipmap/section3" />
+
+            <ImageView
+                android:id="@+id/share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/img_marin_left"
+                android:src="@mipmap/section4" />
+
+        </TableRow>
+
+        <TableRow android:layout_marginTop="@dimen/tablerow_marin_top">
+
+            <ImageView
+                android:id="@+id/personal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/img_marin_right"
+                android:src="@mipmap/section5" />
+
+            <ImageView
+                android:id="@+id/help"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/img_marin_left"
+                android:src="@mipmap/section6" />
+
+        </TableRow>
+
+
+    </TableLayout>
+
+    <ImageView
+        android:id="@+id/set"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="32dp"
+        android:layout_marginRight="32dp"
+        android:src="@mipmap/setting_icon" />
+</RelativeLayout>

@@ -1,0 +1,22 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="layout_paddingLeft">16dp</dimen>
+    <dimen name="layout_paddingRight">16dp</dimen>
+    <dimen name="layout_paddingTop">16dp</dimen>
+    <dimen name="layout_paddingBottom">16dp</dimen>
+
+    <dimen name="frag_top_height">48dp</dimen>
+    <dimen name="frag_bot_height">48dp</dimen>
+    <dimen name="tablerow_marin_top">20dp</dimen>
+    <dimen name="img_marin_left">10dp</dimen>
+    <dimen name="img_marin_right">10dp</dimen>
+
+    <dimen name="grid_marin_top">16dp</dimen>
+    <dimen name="grid_marin_left">16dp</dimen>
+    <dimen name="grid_marin_right">16dp</dimen>
+
+    <dimen name="btn_textSize">20sp</dimen>
+</resources>

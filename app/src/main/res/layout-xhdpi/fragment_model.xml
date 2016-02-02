@@ -1,0 +1,87 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_model"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".changeClotheFragment.ModelFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <RelativeLayout
+        android:id="@+id/model_top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/frag_top_height"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+
+        android:background="#f84f95">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/img_marin_left"
+            android:paddingRight="@dimen/img_marin_right"
+            android:src="@mipmap/arrow" />
+
+        <ImageView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/title1" />
+
+        <ImageView
+            android:id="@+id/del"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/img_marin_left"
+            android:paddingRight="@dimen/img_marin_right"
+            android:src="@mipmap/delete" />
+
+    </RelativeLayout>
+
+    <GridView
+        android:id="@+id/gv_model"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/model_top"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/grid_marin_left"
+        android:layout_marginRight="@dimen/grid_marin_right"
+        android:numColumns="3" />
+
+    <LinearLayout
+        android:id="@+id/bot"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/frag_bot_height"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textSize="@dimen/btn_textSize" />
+
+        <TextView
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/delete"
+            android:textSize="@dimen/btn_textSize" />
+    </LinearLayout>
+
+
+</RelativeLayout>
