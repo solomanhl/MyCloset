@@ -1,7 +1,10 @@
 package com.solomanhl.mycloset.changeClotheFragment;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,7 +17,9 @@ import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.Size;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -28,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.solomanhl.mycloset.App;
+import com.solomanhl.mycloset.MainActivity;
 import com.solomanhl.mycloset.R;
 
 import java.io.BufferedInputStream;
@@ -111,8 +117,19 @@ public class CameraAddMaskFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.cameraaddmask, container, false);
+
         savePath = app.SDpath + app.AppPath + "model/";
+        performCodeWithPermission(getString(R.string.request_permission),new MainActivity.PermissionCallback() {
+            @Override
+            public void hasPermission() {
+                //执行打开相机相关代码
+            }
+            @Override
+            public void noPermission() {
+            }
+        }, Manifest.permission.CAMERA);
         init(view);
+
         return view;
     }
 
@@ -149,6 +166,18 @@ public class CameraAddMaskFragment extends Fragment implements View.OnClickListe
                 // 拍照
                 if (camera != null) {
                     camera.takePicture(null, null, new MyPictureCallback());
+                }else{
+                    AlertDialog.Builder builder=new AlertDialog.Builder(getContext());  //先得到构造器
+                    builder.setTitle(getResources().getString(R.string.no_camera_title)); //设置标题
+                    builder.setIcon(R.mipmap.ic_launcher);//设置图标，图片id即可
+                    builder.setMessage(getResources().getString(R.string.no_camera));
+                    builder.setPositiveButton(getResources().getString(R.string.ok),new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create().show();
                 }
                 break;
         }
@@ -408,6 +437,19 @@ public class CameraAddMaskFragment extends Fragment implements View.OnClickListe
             return bitmap;
         }
 
+    }
+
+
+    /**
+     * Android M运行时权限请求封装
+     * @param permissionDes 权限描述
+     * @param runnable 请求权限回调
+     * @param permissions 请求的权限（数组类型），直接从Manifest中读取相应的值，比如Manifest.permission.WRITE_CONTACTS
+     */
+    public void performCodeWithPermission(@NonNull String permissionDes, MainActivity.PermissionCallback runnable, @NonNull String... permissions){
+        if(getActivity()!=null && getActivity() instanceof MainActivity){
+            ((MainActivity) getActivity()).performCodeWithPermission(permissionDes,runnable,permissions);
+        }
     }
 
 }

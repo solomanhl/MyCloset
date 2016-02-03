@@ -32,3 +32,4 @@ public class App extends Application {
         SDK_Version = Build.VERSION.SDK_INT;
     }
 }
+

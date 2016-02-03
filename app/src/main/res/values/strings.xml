@@ -3,6 +3,10 @@
     <string name="action_settings">Settings</string>
     <string name="cancel">取消</string>
     <string name="delete">删除</string>
+    <string name="ok">确定</string>
+    <string name="no_camera_title">打开相机错误</string>
+    <string name="no_camera">无法连接相机</string>
+    <string name="request_permission">美丽衣橱正在请求权限</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
