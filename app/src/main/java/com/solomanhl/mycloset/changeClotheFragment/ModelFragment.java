@@ -2,7 +2,10 @@ package com.solomanhl.mycloset.changeClotheFragment;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,9 +26,13 @@ import com.solomanhl.file.FileUtils;
 import com.solomanhl.mycloset.App;
 import com.solomanhl.mycloset.R;
 import com.solomanhl.mycloset.SelectPicPopupWindow;
+import com.solomanhl.mycloset.fittingRoom.FittingRoomFragment;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -58,6 +65,7 @@ public class ModelFragment extends Fragment {
     private boolean[] delId;//需要删除的
     private int delNum;
     private TextView cancel, delete;
+    private FittingRoomFragment frf;
 
     private CameraAddMaskFragment cam;
     //为弹出窗口实现监听类
@@ -107,9 +115,61 @@ public class ModelFragment extends Fragment {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
-            app.model = picturePath;
+
+            copyFile(picturePath);
+            reFresh();
         }
 
+    }
+
+    private int widthDrawable = 640;//预览和保存的宽度
+    private int heightDrawable = 360;
+    private void copyFile(String picturePath) {
+        Bitmap b = BitmapFactory.decodeFile(picturePath);
+        float scaleWidth = (float) widthDrawable/b.getWidth();
+        float scaleHeight = (float) heightDrawable/b.getHeight();//宽高比
+        Bitmap resizeBmp;
+        Matrix matrix = new Matrix();
+        float scale;
+        if(scaleWidth < scaleHeight) {
+            scale = scaleHeight;//取大的
+        } else {
+            scale = scaleWidth;
+        }
+        matrix.postScale(scale, scale);//缩放比例
+        resizeBmp = Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(),  matrix, true);
+
+        // 生成文件
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+
+        // 格式化时间
+        String sdate = format.format(date);
+        String filename = "model" + sdate + ".png";
+        String savePath = app.SDpath + app.AppPath + "model/";
+        File fileFolder = new File(savePath);
+//			if (!fileFolder.exists()) { // 如果目录不存在，则创建一个名为"finger"的目录
+//				fileFolder.mkdir();
+//			}
+        File pngFile = new File(fileFolder, filename);
+        if (pngFile.exists()) {
+            pngFile.delete();
+        }
+        FileOutputStream outputStream = null; // 文件输出流
+        try {
+            outputStream = new FileOutputStream(pngFile);
+            resizeBmp.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+            outputStream.flush();
+
+            // out.close();
+            // outputStream.write(data); // 写入sd卡中
+            outputStream.close(); // 关闭输出流
+            app.model = savePath + filename;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        b.recycle();
+        resizeBmp.recycle();
     }
 
     public ModelFragment() {
@@ -185,6 +245,7 @@ public class ModelFragment extends Fragment {
 
     private void findFragment() {
         cam = new CameraAddMaskFragment();
+        frf = new FittingRoomFragment();
     }
 
     private void setOnclickListener() {
@@ -333,13 +394,9 @@ public class ModelFragment extends Fragment {
             // 在本例中arg2=arg3
             HashMap<String, Object> item = (HashMap<String, Object>) arg0.getItemAtPosition(arg2);
             // 显示所选Item的ItemText
-            if (arg2 == tempArray01.size() - 1){
-                app.model = "";
-            }else{
-                app.model = item.get("ItemImage").toString();
-            }
+
 //            Log.w("info","arg0:" + String.valueOf(arg0) + ";arg1:" + String.valueOf(arg1) + ";arg2:" + String.valueOf(arg2) + ";arg3:" + String.valueOf(arg3));
-            Log.w("info", "Click position " + String.valueOf(arg2) + ".The model is " + app.model);
+//            Log.w("info", "Click position " + String.valueOf(arg2) + ".The model is " + app.model);
 
             ImageView iv = (ImageView) arg1.findViewById(R.id.iv_gridmodel);
             if (delMode) {
@@ -358,12 +415,17 @@ public class ModelFragment extends Fragment {
                 }
                 showDelNum();
             } else {
-
+                if ( arg2 == tempArray01.size() - 1 ) {//点的是加号图片
+                    app.model = "";
+                    openDialog();
+                }else{
+                    app.model = item.get("ItemImage").toString();
+                    //正常模式转到试衣间
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, frf).addToBackStack("FittinRoom").commit();
+                }
             }
 
-            if ("".equals(app.model)) {//点的是加号图片
-                openDialog();
-            }
+
         }
 
     }

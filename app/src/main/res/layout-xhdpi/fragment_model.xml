@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:src="@mipmap/title1" />
+            android:src="@mipmap/title3" />
 
         <ImageView
             android:id="@+id/del"

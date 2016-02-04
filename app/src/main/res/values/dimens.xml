@@ -19,4 +19,8 @@
     <dimen name="grid_marin_right">16dp</dimen>
 
     <dimen name="btn_textSize">20sp</dimen>
+
+    <dimen name="list_marin_top">8dp</dimen>
+    <dimen name="list_head_width">100dp</dimen>
+    <dimen name="list_head_height">40dp</dimen>
 </resources>

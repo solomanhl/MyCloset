@@ -7,6 +7,9 @@
     <string name="no_camera_title">打开相机错误</string>
     <string name="no_camera">无法连接相机</string>
     <string name="request_permission">美丽衣橱正在请求权限</string>
+    <string name="shangyi">上衣</string>
+    <string name="qunzi">裙子</string>
+    <string name="kuzi">裤子</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
