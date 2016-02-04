@@ -160,7 +160,6 @@ public class ModelFragment extends Fragment {
             outputStream = new FileOutputStream(pngFile);
             resizeBmp.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
-
             // out.close();
             // outputStream.write(data); // 写入sd卡中
             outputStream.close(); // 关闭输出流
