@@ -348,11 +348,15 @@ public class ClothesFragment extends Fragment {
 
     };
 
+    private static final String ARG_PARAM1 = "param1";
     private void takePhoto() {
         if (cam != null){
             getActivity().getSupportFragmentManager().beginTransaction().remove(cam);
         }
-        cam = new CameraAddMaskFragment(app.type[app.type_posi]);
+        cam = new CameraAddMaskFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, app.type[app.type_posi]);
+        cam.setArguments(args);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, cam).addToBackStack("camera").commit();
     }
 

@@ -244,7 +244,10 @@ public class ModelFragment extends Fragment {
     }
 
     private void findFragment() {
-        cam = new CameraAddMaskFragment("model");
+        cam = new CameraAddMaskFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, "model");
+        cam.setArguments(args);
         frf = new FittingRoomFragment();
     }
 
