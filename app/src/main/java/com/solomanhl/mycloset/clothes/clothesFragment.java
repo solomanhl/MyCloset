@@ -1,6 +1,8 @@
-package com.solomanhl.mycloset.changeClotheFragment;
+package com.solomanhl.mycloset.clothes;
+
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,9 +18,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -27,7 +31,6 @@ import com.solomanhl.mycloset.App;
 import com.solomanhl.mycloset.CameraAddMaskFragment;
 import com.solomanhl.mycloset.R;
 import com.solomanhl.mycloset.SelectPicPopupWindow;
-import com.solomanhl.mycloset.fittingRoom.FittingRoomFragment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,178 +40,42 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-///**
-// * A simple {@link Fragment} subclass.
-// * Activities that contain this fragment must implement the
-// * {@link ModelFragment.OnFragmentInteractionListener} interface
-// * to handle interaction events.
-// * Use the {@link ModelFragment#newInstance} factory method to
-// * create an instance of this fragment.
-// */
-public class ModelFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    //自定义的弹出框类
-    SelectPicPopupWindow menuWindow;
-    // TODO: Rename and change types of parameters
-    private String mParam1;
 
-//    private OnFragmentInteractionListener mListener;
-    private String mParam2;
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class ClothesFragment extends Fragment {
+
     private App app;
     private LinearLayout bot;
     private GridView gv_model;
+    private ListView clotheList;
     private List<String> tempArray01 = new ArrayList<String>();
     private ImageView del, back;
     private boolean delMode;
     private boolean[] delId;//需要删除的
     private int delNum;
+
     private TextView cancel, delete;
-    private FittingRoomFragment frf;
-
-    private CameraAddMaskFragment cam;
-    //为弹出窗口实现监听类
-    private View.OnClickListener itemsOnClick = new View.OnClickListener() {
-
-        public void onClick(View v) {
-            menuWindow.dismiss();
-            switch (v.getId()) {
-                case R.id.btn_take_photo:
-                    takePhoto();
-                    break;
-                case R.id.btn_pick_photo:
-                    pickPhoto();
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    };
-
-    private void takePhoto() {
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, cam).addToBackStack("camera").commit();
-    }
-
-    private static int RESULT_LOAD_IMAGE = 1;
-    private static int RESULT_OK = -1;
-    private void pickPhoto() {
-        Intent i = new Intent(
-                Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        startActivityForResult(i, RESULT_LOAD_IMAGE);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            Cursor cursor = getActivity().getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-
-            copyFile(picturePath);
-            reFresh();
-        }
-
-    }
+    //自定义的弹出框类
+    SelectPicPopupWindow menuWindow;
 
     private int widthDrawable = 640;//预览和保存的宽度
     private int heightDrawable = 360;
-    private void copyFile(String picturePath) {
-        Bitmap b = BitmapFactory.decodeFile(picturePath);
-        float scaleWidth = (float) widthDrawable/b.getWidth();
-        float scaleHeight = (float) heightDrawable/b.getHeight();//宽高比
-        Bitmap resizeBmp;
-        Matrix matrix = new Matrix();
-        float scale;
-        if(scaleWidth < scaleHeight) {
-            scale = scaleHeight;//取大的
-        } else {
-            scale = scaleWidth;
-        }
-        matrix.postScale(scale, scale);//缩放比例
-        resizeBmp = Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(),  matrix, true);
 
-        // 生成文件
-        Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+    private CameraAddMaskFragment cam;
 
-        // 格式化时间
-        String sdate = format.format(date);
-        String filename = "model" + sdate + ".png";
-        String savePath = app.SDpath + app.AppPath + "model/";
-        File fileFolder = new File(savePath);
-//			if (!fileFolder.exists()) { // 如果目录不存在，则创建一个名为"finger"的目录
-//				fileFolder.mkdir();
-//			}
-        File pngFile = new File(fileFolder, filename);
-        if (pngFile.exists()) {
-            pngFile.delete();
-        }
-        FileOutputStream outputStream = null; // 文件输出流
-        try {
-            outputStream = new FileOutputStream(pngFile);
-            resizeBmp.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-            outputStream.flush();
-            // out.close();
-            // outputStream.write(data); // 写入sd卡中
-            outputStream.close(); // 关闭输出流
-            app.model = savePath + filename;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        b.recycle();
-        resizeBmp.recycle();
-    }
-
-    public ModelFragment() {
+    public ClothesFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ModelFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ModelFragment newInstance(String param1, String param2) {
-        ModelFragment fragment = new ModelFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        app = (App) getActivity().getApplicationContext(); // 获得全局变量
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        app = (App) getActivity().getApplicationContext(); // 获得全局变量
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_model, container, false);
+        View view = inflater.inflate(R.layout.fragment_clothes, container, false);
 
         findView(view);
         setOnclickListener();
@@ -216,13 +83,20 @@ public class ModelFragment extends Fragment {
 
         delMode = false;
         bot.setVisibility(View.INVISIBLE);
-        reFresh();
+        reFresh(app.type[app.type_posi]);
+//        type_posi = 0;
+
+        updateListView();
 
         return view;
     }
 
-    private void addModel() {
-        String modelPath = app.SDpath + app.AppPath + "model/";
+    private void findFragment() {
+//        cam = new CameraAddMaskFragment("model");
+    }
+
+    private void addPic(String type) {
+        String modelPath = app.SDpath + app.AppPath + type + "/";
         FileUtils f = new FileUtils();
         File[] files = f.getFiles(modelPath);
 
@@ -243,11 +117,6 @@ public class ModelFragment extends Fragment {
         }
     }
 
-    private void findFragment() {
-        cam = new CameraAddMaskFragment("model");
-        frf = new FittingRoomFragment();
-    }
-
     private void setOnclickListener() {
         del.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,7 +124,7 @@ public class ModelFragment extends Fragment {
                 Log.w("info", "del Onclicked");
 //                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, modelFragment).addToBackStack("model").commit();
                 delMode = true;
-                reFresh();
+                reFresh(app.type[app.type_posi]);
                 del.setVisibility(View.INVISIBLE);
                 bot.setVisibility(View.VISIBLE);
             }
@@ -268,7 +137,7 @@ public class ModelFragment extends Fragment {
                 delNum = 0;
                 if (delMode) {//删除模式返回到正常模式
                     delMode = false;
-                    reFresh();
+                    reFresh(app.type[app.type_posi]);
                     del.setVisibility(View.VISIBLE);
                     bot.setVisibility(View.INVISIBLE);
                 } else {//正常模式返回到上个frag
@@ -285,7 +154,7 @@ public class ModelFragment extends Fragment {
                 delNum = 0;
                 if (delMode) {//删除模式返回到正常模式
                     delMode = false;
-                    reFresh();
+                    reFresh(app.type[app.type_posi]);
                     del.setVisibility(View.VISIBLE);
                     bot.setVisibility(View.INVISIBLE);
                 }
@@ -310,22 +179,52 @@ public class ModelFragment extends Fragment {
             }
         }
         showDelNum();
-        reFresh();
+        reFresh(app.type[app.type_posi]);
     }
 
-    private void reFresh() {
+    private void reFresh(String type) {
         delNum = 0;
-        addModel();
+        addPic(type);
         updateGridView(tempArray01);
     }
 
     private void findView(View view) {
         bot = (LinearLayout) view.findViewById(R.id.bot);
+        clotheList = (ListView)  view.findViewById(R.id.clotheList);
         gv_model = (GridView) view.findViewById(R.id.gv_model);
         del = (ImageView) view.findViewById(R.id.del);
         back = (ImageView) view.findViewById(R.id.back);
         cancel = (TextView) view.findViewById(R.id.cancel);
         delete = (TextView) view.findViewById(R.id.delete);
+    }
+
+    private List<String> getListData(){
+        Resources res = getResources();
+        String[] array = res.getStringArray(R.array.typeArray);
+        List<String> data = new ArrayList<String>();
+        for (int i= 0; i<app.type.length; i++){
+            data.add(array[i]);
+        }
+        return data;
+
+    }
+
+    private void updateListView() {
+        // TODO Auto-generated method stub
+        /*为ListView设置Adapter来绑定数据*/
+        clotheList.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.list_type, getListData()));
+
+        //添加消息处理
+        clotheList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                   long arg3) {
+                //点击后在标题上显示点击了第几行                    setTitle("你点击了第"+arg2+"行");
+                app.type_posi = arg2;
+                reFresh(app.type[app.type_posi]);
+            }
+        });
     }
 
     private void updateGridView(List<String> dataArray) {
@@ -364,10 +263,10 @@ public class ModelFragment extends Fragment {
 //        iv.setOnClickListener(new View.OnClickListener() {
 //            public void onClick(View v) {
         //gridView里面已经在监听器里面了，直接弹窗
-                //实例化SelectPicPopupWindow
-                menuWindow = new SelectPicPopupWindow(getActivity(), itemsOnClick);
-                //显示窗口
-                menuWindow.showAtLocation(getActivity().findViewById(R.id.rl_model), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
+        //实例化SelectPicPopupWindow
+        menuWindow = new SelectPicPopupWindow(getActivity(), itemsOnClick);
+        //显示窗口
+        menuWindow.showAtLocation(getActivity().findViewById(R.id.rl_model), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
 //            }
 //        });
 
@@ -421,7 +320,7 @@ public class ModelFragment extends Fragment {
                 }else{
                     app.model = item.get("ItemImage").toString();
                     //正常模式转到试衣间
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, frf).addToBackStack("FittinRoom").commit();
+//                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, frf).addToBackStack("FittinRoom").commit();
                 }
             }
 
@@ -429,42 +328,110 @@ public class ModelFragment extends Fragment {
         }
 
     }
-    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
-//
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-//
-//    /**
-//     * This interface must be implemented by activities that contain this
-//     * fragment to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     * <p>
-//     * See the Android Training lesson <a href=
-//     * "http://developer.android.com/training/basics/fragments/communicating.html"
-//     * >Communicating with Other Fragments</a> for more information.
-//     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
+
+    //为弹出窗口实现监听类
+    private View.OnClickListener itemsOnClick = new View.OnClickListener() {
+
+        public void onClick(View v) {
+            menuWindow.dismiss();
+            switch (v.getId()) {
+                case R.id.btn_take_photo:
+                    takePhoto();
+                    break;
+                case R.id.btn_pick_photo:
+                    pickPhoto();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    };
+
+    private void takePhoto() {
+        if (cam != null){
+            getActivity().getSupportFragmentManager().beginTransaction().remove(cam);
+        }
+        cam = new CameraAddMaskFragment(app.type[app.type_posi]);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, cam).addToBackStack("camera").commit();
+    }
+
+    private static int RESULT_LOAD_IMAGE = 1;
+    private static int RESULT_OK = -1;
+    private void pickPhoto() {
+        Intent i = new Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        startActivityForResult(i, RESULT_LOAD_IMAGE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            copyFile(picturePath);
+            reFresh(app.type[app.type_posi]);
+        }
+
+    }
+
+    private void copyFile(String picturePath) {
+        Bitmap b = BitmapFactory.decodeFile(picturePath);
+        float scaleWidth = (float) widthDrawable/b.getWidth();
+        float scaleHeight = (float) heightDrawable/b.getHeight();//宽高比
+        Bitmap resizeBmp;
+        Matrix matrix = new Matrix();
+        float scale;
+        if(scaleWidth < scaleHeight) {
+            scale = scaleHeight;//取大的
+        } else {
+            scale = scaleWidth;
+        }
+        matrix.postScale(scale, scale);//缩放比例
+        resizeBmp = Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(),  matrix, true);
+
+        // 生成文件
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+
+        // 格式化时间
+        String sdate = format.format(date);
+        String filename = "model" + sdate + ".png";
+        String savePath = app.SDpath + app.AppPath + "model/";
+        File fileFolder = new File(savePath);
+//			if (!fileFolder.exists()) { // 如果目录不存在，则创建一个名为"finger"的目录
+//				fileFolder.mkdir();
+//			}
+        File pngFile = new File(fileFolder, filename);
+        if (pngFile.exists()) {
+            pngFile.delete();
+        }
+        FileOutputStream outputStream = null; // 文件输出流
+        try {
+            outputStream = new FileOutputStream(pngFile);
+            resizeBmp.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+            outputStream.flush();
+            // out.close();
+            // outputStream.write(data); // 写入sd卡中
+            outputStream.close(); // 关闭输出流
+            app.model = savePath + filename;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        b.recycle();
+        resizeBmp.recycle();
+    }
+
 }

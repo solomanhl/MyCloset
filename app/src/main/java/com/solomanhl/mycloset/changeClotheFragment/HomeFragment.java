@@ -1,10 +1,7 @@
 package com.solomanhl.mycloset.changeClotheFragment;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-//import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +11,12 @@ import android.widget.ImageView;
 import com.solomanhl.file.FileUtils;
 import com.solomanhl.mycloset.App;
 import com.solomanhl.mycloset.R;
+import com.solomanhl.mycloset.clothes.ClothesFragment;
+import com.solomanhl.mycloset.fittingRoom.FittingRoomFragment;
 
 import java.io.IOException;
+
+//import android.app.Fragment;
 
 ///**
 // * A simple {@link Fragment} subclass.
@@ -39,7 +40,9 @@ public class HomeFragment extends Fragment {
 
     private App app;
     private ModelFragment modelFragment;
-    private ImageView model;
+    private FittingRoomFragment roomFragment;
+    private ClothesFragment clothesFragment;
+    private ImageView model, room, closet;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -95,12 +98,15 @@ public class HomeFragment extends Fragment {
             f.createSDFile("BeautifulCloset/model/.nomedia");
             f.createSDDir("BeautifulCloset/shangyi");
             f.createSDFile("BeautifulCloset/shangyi/.nomedia");
-            f.createSDDir("BeautifulCloset/waitao");
-            f.createSDFile("BeautifulCloset/waitao/.nomedia");
-            f.createSDDir("BeautifulCloset/lianyiqun");
-            f.createSDFile("BeautifulCloset/lianyiqun/.nomedia");
-            f.createSDDir("BeautifulCloset/banshenqun");
-            f.createSDFile("BeautifulCloset/banshenqun/.nomedia");
+            f.createSDDir("BeautifulCloset/qunzi");
+            f.createSDFile("BeautifulCloset/qunzi/.nomedia");
+
+//            f.createSDDir("BeautifulCloset/waitao");
+//            f.createSDFile("BeautifulCloset/waitao/.nomedia");
+//            f.createSDDir("BeautifulCloset/lianyiqun");
+//            f.createSDFile("BeautifulCloset/lianyiqun/.nomedia");
+//            f.createSDDir("BeautifulCloset/banshenqun");
+//            f.createSDFile("BeautifulCloset/banshenqun/.nomedia");
             f.createSDDir("BeautifulCloset/kuzi");
             f.createSDFile("BeautifulCloset/kuzi/.nomedia");
         } catch (IOException e) {
@@ -111,6 +117,8 @@ public class HomeFragment extends Fragment {
 
     private void findFragment() {
         modelFragment = new ModelFragment();
+        roomFragment = new FittingRoomFragment();
+        clothesFragment = new ClothesFragment();
     }
 
     private void setOnclickListener() {
@@ -122,10 +130,28 @@ public class HomeFragment extends Fragment {
 //                getFragmentManager().beginTransaction().replace(R.id.container, modelFragment).addToBackStack( "model").commit();
             }
         });
+        room.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.w("info","room Onclicked");
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, roomFragment).addToBackStack("room").commit();
+//                getFragmentManager().beginTransaction().replace(R.id.container, modelFragment).addToBackStack( "model").commit();
+            }
+        });
+        closet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.w("info","closet Onclicked");
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, clothesFragment).addToBackStack("clothe").commit();
+//                getFragmentManager().beginTransaction().replace(R.id.container, modelFragment).addToBackStack( "model").commit();
+            }
+        });
     }
 
     private void findView(View view) {
         model = (ImageView) view.findViewById(R.id.model);
+        room = (ImageView) view.findViewById(R.id.room);
+        closet = (ImageView) view.findViewById(R.id.closet);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

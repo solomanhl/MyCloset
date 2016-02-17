@@ -11,6 +11,12 @@
     <string name="qunzi">裙子</string>
     <string name="kuzi">裤子</string>
 
+    <string-array name="typeArray">
+        <item>上衣</item>
+        <item>裙子</item>
+        <item>裤子</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

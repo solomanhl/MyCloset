@@ -13,6 +13,8 @@ public class App extends Application {
     public int SDK_Version;
     public boolean SD_Permission;
     public String model, shangshen, xiashen;
+    public String[] type = {"shangyi", "qunzi", "kuzi"};
+    public int type_posi;
 
     @Override
     public void onCreate() {
@@ -21,6 +23,7 @@ public class App extends Application {
         getSDK_Version();
         getSDpath();
         SD_Permission = false;
+        type_posi = 0;
     }
 
     private String getSDpath() {
