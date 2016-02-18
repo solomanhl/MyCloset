@@ -15,8 +15,8 @@
     <dimen name="img_marin_right">10dp</dimen>
 
     <dimen name="grid_marin_top">16dp</dimen>
-    <dimen name="grid_marin_left">16dp</dimen>
-    <dimen name="grid_marin_right">16dp</dimen>
+    <dimen name="grid_marin_left">12dp</dimen>
+    <dimen name="grid_marin_right">12dp</dimen>
 
     <dimen name="btn_textSize">20sp</dimen>
 
@@ -24,5 +24,5 @@
     <dimen name="list_head_width">100dp</dimen>
     <dimen name="list_head_height">40dp</dimen>
 
-    <dimen name="listview_width">60dp</dimen>
+    <dimen name="listview_width">50dp</dimen>
 </resources>
