@@ -30,7 +30,7 @@ import com.solomanhl.file.FileUtils;
 import com.solomanhl.mycloset.App;
 import com.solomanhl.mycloset.CameraAddMaskFragment;
 import com.solomanhl.mycloset.R;
-import com.solomanhl.mycloset.SelectPicPopupWindow;
+import com.solomanhl.mycloset.SelectPicPopupWindowWithoutPickPhoto;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -58,7 +58,7 @@ public class ClothesFragment extends Fragment {
 
     private TextView cancel, delete;
     //自定义的弹出框类
-    SelectPicPopupWindow menuWindow;
+    SelectPicPopupWindowWithoutPickPhoto menuWindow;
 
     private int widthDrawable = 640;//预览和保存的宽度
     private int heightDrawable = 360;
@@ -263,8 +263,8 @@ public class ClothesFragment extends Fragment {
 //        iv.setOnClickListener(new View.OnClickListener() {
 //            public void onClick(View v) {
         //gridView里面已经在监听器里面了，直接弹窗
-        //实例化SelectPicPopupWindow
-        menuWindow = new SelectPicPopupWindow(getActivity(), itemsOnClick);
+        //实例化SelectPicPopupWindowWithoutPickPhoto
+        menuWindow = new SelectPicPopupWindowWithoutPickPhoto(getActivity(), itemsOnClick);
         //显示窗口
         menuWindow.showAtLocation(getActivity().findViewById(R.id.rl_model), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
 //            }

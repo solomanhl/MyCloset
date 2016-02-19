@@ -31,6 +31,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".maskImage.ImageAddMask_kuzi"></activity>
+        <activity android:name=".maskImage.ImageAddMask_shangyi"></activity>
+        <activity android:name=".maskImage.ImageAddMask_qunzi"></activity>
     </application>
 
 </manifest>

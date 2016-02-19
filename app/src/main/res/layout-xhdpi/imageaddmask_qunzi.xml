@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:maskimage="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <!-- TODO: Update blank fragment layout -->
+    <!-- 有遮罩图片 -->
+
+    <com.solomanhl.mycloset.maskImage.MaskImage_qunzi
+        android:id="@+id/imageview_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        maskimage:mask_qunzi="@mipmap/i_qunzi_1" />
+
+</FrameLayout>
