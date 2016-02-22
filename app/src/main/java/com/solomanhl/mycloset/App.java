@@ -12,7 +12,7 @@ public class App extends Application {
     public String AppPath = "BeautifulCloset/";
     public int SDK_Version;
     public boolean SD_Permission;
-    public String model, shangshen, xiashen;
+    public String model, shangyi, kuzi, qunzi;
     public String[] type = {"shangyi", "qunzi", "kuzi"};
     public int type_posi;
 
