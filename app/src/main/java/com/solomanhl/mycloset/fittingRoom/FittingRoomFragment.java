@@ -21,6 +21,8 @@ import android.widget.ListView;
 import com.solomanhl.file.FileUtils;
 import com.solomanhl.mycloset.App;
 import com.solomanhl.mycloset.R;
+import com.solomanhl.mycloset.view.DrawImageLayout;
+import com.solomanhl.mycloset.view.ImageInfo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,6 +39,7 @@ public class FittingRoomFragment extends Fragment {
     private ImageView model;
     private FrameLayout room_bg;
     private ListView lv_shangyi,lv_kuzi,lv_qunzi;
+    private String[] yifu = new String[3];
 
     public FittingRoomFragment() {
         // Required empty public constructor
@@ -56,6 +59,7 @@ public class FittingRoomFragment extends Fragment {
 
         findView(view);
         init();
+        create_DrawImageLayout();
 
         return view;
     }
@@ -72,6 +76,11 @@ public class FittingRoomFragment extends Fragment {
         updateListView_shangyi();
         updateListView_kuzi();
         updateListView_qunzi();
+
+        //测试数据
+        yifu[0] = (String) list_shangyi_data.get(0).get("img");
+        yifu[1] = (String) list_kuzi_data.get(0).get("img");
+        yifu[2] = (String) list_qunzi_data.get(0).get("img");
     }
 
     private void findView(View view) {
@@ -87,6 +96,7 @@ public class FittingRoomFragment extends Fragment {
     private void updateListView_shangyi() {
         // TODO Auto-generated method stub
         getData_shangyi();
+
         /*为ListView设置Adapter来绑定数据*/
         MyAdapter_shangyi adapter = new MyAdapter_shangyi(getContext());
 
@@ -97,6 +107,7 @@ public class FittingRoomFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 //点击后在标题上显示点击了第几行                    setTitle("你点击了第"+arg2+"行");
+                yifu[0] = (String) list_shangyi_data.get(arg2).get("img");
             }
         });
     }
@@ -201,6 +212,7 @@ private void updateListView_kuzi() {
         @Override
         public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             //点击后在标题上显示点击了第几行                    setTitle("你点击了第"+arg2+"行");
+            yifu[1] = (String) list_shangyi_data.get(arg2).get("img");
         }
     });
 }
@@ -295,6 +307,7 @@ private void updateListView_qunzi() {
         @Override
         public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             //点击后在标题上显示点击了第几行                    setTitle("你点击了第"+arg2+"行");
+            yifu[2] = (String) list_shangyi_data.get(arg2).get("img");
         }
     });
 }
@@ -375,4 +388,44 @@ private void updateListView_qunzi() {
         }
     }
 //end 裙子-----------------------------------------------------------------------------------------
+
+    private void  create_DrawImageLayout(){
+        DrawImageLayout layout = new DrawImageLayout(getContext());
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT);
+        layout.setLayoutParams(params);
+        layout.setImages(getInfos(yifu));//加入图片
+        room_bg.addView(layout);
+//        setContentView(layout);
+    }
+
+    private ImageInfo[] getInfos(String[] path){
+        ImageInfo [] infos = new ImageInfo [3];
+
+        ImageInfo info = new ImageInfo();
+        info.setWidth(240);
+        info.setHeight(320);
+        info.setX(120);
+        info.setY(160);
+//        info.setPath(FileUtil.getImagePath("2014-03big/1393830348113"));
+        info.setPath(path[0]);
+        infos[0]=info;
+
+        info = new ImageInfo();
+        info.setWidth(240);
+        info.setHeight(320);
+        info.setX(120);
+        info.setY(160);
+        info.setPath(path[1]);
+        infos[1]=info;
+
+        info = new ImageInfo();
+        info.setWidth(240);
+        info.setHeight(320);
+        info.setX(120);
+        info.setY(160);
+        info.setPath(path[2]);
+        infos[2]=info;
+
+        return infos;
+    }
 }
