@@ -13,9 +13,21 @@ public class ImageInfo {
 	/** 左上角（中心点）的y初始坐标 **/
 	private int y;
 	private Bitmap bit = null;
+
+	private String yifu_type;//衣服的种类 shangyi kuzi qunzi
+
 	public ImageInfo(){
 
 	}
+
+	public String getYifu_type() {
+		return yifu_type;
+	}
+
+	public void setYifu_type(String yifu_type) {
+		this.yifu_type = yifu_type;
+	}
+
 	public String getPath() {
 		return path;
 	}

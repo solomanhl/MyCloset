@@ -21,6 +21,7 @@ import android.widget.ListView;
 import com.solomanhl.file.FileUtils;
 import com.solomanhl.mycloset.App;
 import com.solomanhl.mycloset.R;
+import com.solomanhl.mycloset.utils.FileUtil;
 import com.solomanhl.mycloset.view.DrawImageLayout;
 import com.solomanhl.mycloset.view.ImageInfo;
 
@@ -36,10 +37,13 @@ import java.util.Map;
 public class FittingRoomFragment extends Fragment {
 
     private App app;
-    private ImageView model;
+    private FrameLayout model;
     private FrameLayout room_bg;
     private ListView lv_shangyi,lv_kuzi,lv_qunzi;
     private String[] yifu = new String[3];
+    private boolean hasYifu = false;
+    private boolean hasKuzi = false;
+    private boolean hasQunzi = false;
 
     public FittingRoomFragment() {
         // Required empty public constructor
@@ -59,15 +63,18 @@ public class FittingRoomFragment extends Fragment {
 
         findView(view);
         init();
-        create_DrawImageLayout();
 
         return view;
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void init() {
-        if (!"".equals(app.model) && app.model!=null){
-            Bitmap bm = BitmapFactory.decodeFile(app.model);
-            model.setImageBitmap(bm);
+        //不空且存在
+        if (!"".equals(app.model) && app.model!=null && FileUtil.fielExist(app.model)){
+//            Bitmap bm = BitmapFactory.decodeFile(app.model);
+//            model.setImageBitmap(bm);
+            Drawable d = Drawable.createFromPath(app.model);
+            model.setBackground(d);
             room_bg.setBackgroundResource(R.mipmap.room_bg1);
         }else{
             room_bg.setBackgroundResource(R.mipmap.room_bg2);
@@ -78,14 +85,15 @@ public class FittingRoomFragment extends Fragment {
         updateListView_qunzi();
 
         //测试数据
-        yifu[0] = (String) list_shangyi_data.get(0).get("img");
-        yifu[1] = (String) list_kuzi_data.get(0).get("img");
-        yifu[2] = (String) list_qunzi_data.get(0).get("img");
+//        yifu[0] = (String) list_shangyi_data.get(0).get("img");
+//        yifu[1] = (String) list_kuzi_data.get(0).get("img");
+//        yifu[2] = (String) list_qunzi_data.get(0).get("img");
+        create_DrawImageLayout();
     }
 
     private void findView(View view) {
         room_bg = (FrameLayout) view.findViewById(R.id.room_bg);
-        model = (ImageView) view.findViewById(R.id.model);
+        model = (FrameLayout) view.findViewById(R.id.model);
         lv_shangyi = (ListView) view.findViewById(R.id.lv_shangyi);
         lv_kuzi = (ListView) view.findViewById(R.id.lv_kuzi);
         lv_qunzi = (ListView) view.findViewById(R.id.lv_qunzi);
@@ -108,6 +116,7 @@ public class FittingRoomFragment extends Fragment {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 //点击后在标题上显示点击了第几行                    setTitle("你点击了第"+arg2+"行");
                 yifu[0] = (String) list_shangyi_data.get(arg2).get("img");
+                create_DrawImageLayout();
             }
         });
     }
@@ -191,8 +200,13 @@ public class FittingRoomFragment extends Fragment {
                 holder = (ViewHolder)convertView.getTag();
             }
 //            holder.img.setBackgroundResource((Integer)list_shangyi_data.get(position).get("img"));
-            d = Drawable.createFromPath((String) list_shangyi_data.get(position).get("img"));
-            holder.img.setBackground(d);
+
+//            d = Drawable.createFromPath((String) list_shangyi_data.get(position).get("img"));
+//            holder.img.setBackground(d);
+
+            Bitmap b;
+            b = BitmapFactory.decodeFile((String) list_shangyi_data.get(position).get("img"));
+            holder.img.setImageBitmap(b);
 
             return convertView;
         }
@@ -212,7 +226,8 @@ private void updateListView_kuzi() {
         @Override
         public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             //点击后在标题上显示点击了第几行                    setTitle("你点击了第"+arg2+"行");
-            yifu[1] = (String) list_shangyi_data.get(arg2).get("img");
+            yifu[1] = (String) list_kuzi_data.get(arg2).get("img");
+            create_DrawImageLayout();
         }
     });
 }
@@ -307,7 +322,8 @@ private void updateListView_qunzi() {
         @Override
         public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             //点击后在标题上显示点击了第几行                    setTitle("你点击了第"+arg2+"行");
-            yifu[2] = (String) list_shangyi_data.get(arg2).get("img");
+            yifu[2] = (String) list_qunzi_data.get(arg2).get("img");
+            create_DrawImageLayout();
         }
     });
 }
@@ -389,43 +405,59 @@ private void updateListView_qunzi() {
     }
 //end 裙子-----------------------------------------------------------------------------------------
 
+    private DrawImageLayout layout = null;
+    private FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT);
+//   private int x_yifu, y_yifu, w_yifu, h_yifu;
     private void  create_DrawImageLayout(){
-        DrawImageLayout layout = new DrawImageLayout(getContext());
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT);
+        if (layout !=null){
+            model.removeView(layout);
+//            x_yifu = info_yifu.getX();
+//            y_yifu  = info_yifu.getY();
+//            w_yifu = info_yifu.getWidth();
+//            h_yifu  = info_yifu.getHeight();
+        }else {
+
+        }
+        layout = new DrawImageLayout(getContext());
         layout.setLayoutParams(params);
         layout.setImages(getInfos(yifu));//加入图片
-        room_bg.addView(layout);
+        model.addView(layout);
 //        setContentView(layout);
+        model.invalidate();
     }
 
+    private ImageInfo [] infos = new ImageInfo [3];
+
+    private ImageInfo info_yifu = new ImageInfo();
+    private ImageInfo info_kuzi = new ImageInfo();
+    private ImageInfo info_qunzi = new ImageInfo();
     private ImageInfo[] getInfos(String[] path){
-        ImageInfo [] infos = new ImageInfo [3];
-
-        ImageInfo info = new ImageInfo();
-        info.setWidth(240);
-        info.setHeight(320);
-        info.setX(120);
-        info.setY(160);
+            info_yifu.setWidth((int) app.shangyi_info[0]);
+            info_yifu.setHeight((int) app.shangyi_info[1]);
+            info_yifu.setX((int) app.shangyi_info[2]);
+            info_yifu.setY((int) app.shangyi_info[3]);
+        info_yifu.setYifu_type("shangyi");
 //        info.setPath(FileUtil.getImagePath("2014-03big/1393830348113"));
-        info.setPath(path[0]);
-        infos[0]=info;
+        info_yifu.setPath(path[0]);
+        infos[0]=info_yifu;
 
-        info = new ImageInfo();
-        info.setWidth(240);
-        info.setHeight(320);
-        info.setX(120);
-        info.setY(160);
-        info.setPath(path[1]);
-        infos[1]=info;
+            info_kuzi.setWidth((int) app.kuzi_info[0]);
+            info_kuzi.setHeight((int) app.kuzi_info[1]);
+            info_kuzi.setX((int) app.kuzi_info[2]);
+            info_kuzi.setY((int) app.kuzi_info[3]);
+        info_kuzi.setYifu_type("kuzi");
+        info_kuzi.setPath(path[1]);
+        infos[1]=info_kuzi;
 
-        info = new ImageInfo();
-        info.setWidth(240);
-        info.setHeight(320);
-        info.setX(120);
-        info.setY(160);
-        info.setPath(path[2]);
-        infos[2]=info;
+            info_qunzi.setWidth((int) app.qunzi_info[0]);
+            info_qunzi.setHeight((int) app.qunzi_info[1]);
+            info_qunzi.setX((int) app.qunzi_info[2]);
+            info_qunzi.setY((int) app.qunzi_info[3]);
+        info_qunzi.setYifu_type("qunzi");
+        info_qunzi.setPath(path[2]);
+        infos[2]=info_qunzi;
 
         return infos;
     }
+
 }

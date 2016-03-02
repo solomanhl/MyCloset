@@ -74,7 +74,9 @@ public class MyImageView extends ImageView {
 		LogUtil.i(tag, "onDraw() -- isDrawBorder:"+isDrawBorder);
 		//根据MyImageView来获取bitmap对象
 		BitmapDrawable bd = (BitmapDrawable)this.getDrawable();
-		if(bd!=null&&!isInit)
+//		if(bd!=null&&!isInit)
+		//soloman 加入图片不为空判断
+		if(bd!=null && !isInit && bd.getBitmap() != null)
 		{
 			isInit = true;
 			this.mWidth = bd.getBitmap().getWidth();
@@ -84,6 +86,15 @@ public class MyImageView extends ImageView {
 		dra(canvas);
 	}
 
+	private String yifu_type;//衣服的种类 shangyi kuzi qunzi
+
+	public String getYifu_type() {
+		return yifu_type;
+	}
+
+	public void setYifu_type(String yifu_type) {
+		this.yifu_type = yifu_type;
+	}
 
 	public float getPreX() {
 		return preX;
@@ -115,7 +126,13 @@ public class MyImageView extends ImageView {
 		BitmapDrawable bd = (BitmapDrawable)this.getDrawable();
 		if(bd!=null)
 		{
-			this.mWidth = bd.getBitmap().getWidth();
+			//soloman加入图片是否为空判断
+			if (bd.getBitmap()!=null){
+				this.mWidth = bd.getBitmap().getWidth();
+			}else{
+				this.mWidth = 0;
+			}
+
 		}
 		return mWidth;
 	}
@@ -131,7 +148,12 @@ public class MyImageView extends ImageView {
 		BitmapDrawable bd = (BitmapDrawable)this.getDrawable();
 		if(bd!=null)
 		{
-			this.mHeight = bd.getBitmap().getHeight();
+			//soloman加入图片是否为空判断
+			if (bd.getBitmap()!=null){
+				this.mHeight = bd.getBitmap().getWidth();
+			}else{
+				this.mHeight = 0;
+			}
 		}
 		return mHeight;
 	}

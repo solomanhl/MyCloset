@@ -8,6 +8,7 @@ import android.os.Message;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
+import com.solomanhl.mycloset.App;
 import com.solomanhl.mycloset.utils.LogUtil;
 import com.solomanhl.mycloset.utils.ScalingUtilities;
 
@@ -65,8 +66,11 @@ public class DrawImageLayout extends FrameLayout implements ImageLoadListener {
     private boolean Begin = true;
     private float[] p1 = new float[2];
     private float[] p2 = new float[2];
+
+    private App app;
     public DrawImageLayout(Context context) {
         super(context);
+        app = (App) context.getApplicationContext(); // 获得全局变量
 //		setWillNotDraw(false);
     }
 
@@ -102,6 +106,8 @@ public class DrawImageLayout extends FrameLayout implements ImageLoadListener {
             // iv.setPadding(3, 3, 3, 3);;
             LogUtil.i(tag, "loadImage() -- bit:" + info.getBit());
             iv.setImageBitmap(info.getBit());
+            //soloman设置yImageView包含的衣服类型
+            iv.setYifu_type(bitmap[i].getYifu_type());
 //			iv.setImageResource(R.drawable.ic_launcher);
             FrameLayout.LayoutParams pa = new FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
@@ -121,6 +127,8 @@ public class DrawImageLayout extends FrameLayout implements ImageLoadListener {
             iv.getmMatrix().postTranslate(preX - info.getWidth() / 2, preY - info.getHeight() / 2);
             iv.getImageMatrix().set(iv.getmMatrix());
             addView(iv, pa);
+
+            invalidate();
         }
     }
 
@@ -187,6 +195,26 @@ public class DrawImageLayout extends FrameLayout implements ImageLoadListener {
             float oldPreY = topImageInfo.getPreY();
             topImageInfo.setPreX(X + CX);
             topImageInfo.setPreY(Y + CY);
+
+
+            //soloman获取MyImageView包含的衣服类型
+//            String s = topImageInfo.getYifu_type();
+            switch (topImageInfo.getYifu_type()){
+                case "shangyi":
+                    app.shangyi_info[2] = topImageInfo.getPreX();
+                    app.shangyi_info[3] = topImageInfo.getPreY();
+                    break;
+                case "kuzi":
+                    app.kuzi_info[2] = topImageInfo.getPreX();
+                    app.kuzi_info[3] = topImageInfo.getPreY();
+                    break;
+                case "qunzi":
+                    app.qunzi_info[2] = topImageInfo.getPreX();
+                    app.qunzi_info[3] = topImageInfo.getPreY();
+                    break;
+                default:
+                    break;
+            }
 //			topImageInfo.getmMatrix().postTranslate(topImageInfo.getPreX() - oldPreX, topImageInfo.getPreY() - oldPreY);
 //			LogUtil.i(tag, "actionMove() -- topImageInfo.getPreX() - oldPreX:" +(topImageInfo.getPreX() - oldPreX)
 //					+ ";  topImageInfo.getPreY() - oldPreY:" + (topImageInfo.getPreY() - oldPreY));
@@ -230,7 +258,20 @@ public class DrawImageLayout extends FrameLayout implements ImageLoadListener {
                 }
                 // 获取最新角度和长度
                 length = spacing(event);
-                cos = cos(event);
+                //soloman获取MyImageView包含的衣服类型
+//                switch (topImageInfo.getYifu_type()){
+//                    case "shangyi":
+//                        cos = cos(event) + app.shangyi_info[4];
+//                        break;
+//                    case "kuzi":
+//                        cos = cos(event) + app.kuzi_info[4];
+//                        break;
+//                    case "qunzi":
+//                        cos = cos(event) + app.qunzi_info[4];
+//                        break;
+//                    default:
+//                        break;
+//                }
                 LogUtil.i(tag, "actionMove() -- 旋转角度:" + cos);
                 float width = topImageInfo.getmWidth();
                 float height = topImageInfo.getmHeight();
@@ -242,6 +283,24 @@ public class DrawImageLayout extends FrameLayout implements ImageLoadListener {
                     topImageInfo.getmMatrix().postScale(scW, scW, topImageInfo.getPreX(), topImageInfo.getPreY());
 //					scale(width/2, height/2, topImageInfo.getPreX(), topImageInfo.getPreY(), topImageInfo.getmMatrix());
                     topImageInfo.scalFrame(scW);
+
+                    //soloman获取MyImageView包含的衣服类型
+                    switch (topImageInfo.getYifu_type()){
+                        case "shangyi":
+                            app.shangyi_info[0] *= scW;
+                            app.shangyi_info[1] *= scW;
+                            break;
+                        case "kuzi":
+                            app.kuzi_info[0] *= scW;
+                            app.kuzi_info[1] *= scW;
+                            break;
+                        case "qunzi":
+                            app.qunzi_info[0] *= scW;
+                            app.qunzi_info[1] *= scW;
+                            break;
+                        default:
+                            break;
+                    }
                 }
 
                 // 旋转
@@ -254,6 +313,21 @@ public class DrawImageLayout extends FrameLayout implements ImageLoadListener {
                 }
                 preCos = cos;
                 preLength = length;
+
+                //soloman获取MyImageView包含的衣服类型
+//                switch (topImageInfo.getYifu_type()){
+//                    case "shangyi":
+//                        app.shangyi_info[4] = cos;
+//                        break;
+//                    case "kuzi":
+//                        app.kuzi_info[4] = cos;
+//                        break;
+//                    case "qunzi":
+//                        app.qunzi_info[4] = cos;
+//                        break;
+//                    default:
+//                        break;
+//                }
 
             }
         }

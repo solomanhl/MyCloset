@@ -16,6 +16,11 @@ public class App extends Application {
     public String[] type = {"shangyi", "qunzi", "kuzi"};
     public int type_posi;
 
+    //衣服的初始大小和位置，变化后保存最新的
+    public float shangyi_info[] = {240, 320, 120, 160,0};//上衣的初始位置 宽 高 左上角x y,旋转cox
+    public float kuzi_info[] = {240, 320, 120, 600,0};//裤子的初始位置 宽 高 左上角x y,旋转cox
+    public float qunzi_info[] = {240, 320, 120, 1000,0};//裙子的初始位置 宽 高 左上角x y,旋转cox
+
     @Override
     public void onCreate() {
         super.onCreate();
